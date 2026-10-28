@@ -1,0 +1,46 @@
+from collections import deque
+
+def bfs_shortest_path(graph, start, goal):
+    # Queue stores the path taken to reach a node
+    queue = deque([[start]])
+    visited = set([start])
+    
+    while queue:
+        path = queue.popleft()
+        node = path[-1]
+        
+        # Goal check
+        if node == goal:
+            return path
+        
+        # Explore neighbors level by level
+        for neighbor in graph.get(node, []):
+            if neighbor not in visited:
+                visited.add(neighbor)
+                new_path = list(path)
+                new_path.append(neighbor)
+                queue.append(new_path)
+                
+    return None
+
+# Building layout represented as an adjacency list (Graph)
+building_graph = {
+    'Entrance': ['Hallway_A', 'Hallway_B'],
+    'Hallway_A': ['Entrance', 'Room_101', 'Room_102'],
+    'Hallway_B': ['Entrance', 'Room_103', 'Room_104'],
+    'Room_101': ['Hallway_A'],
+    'Room_102': ['Hallway_A', 'Target_Room'],
+    'Room_103': ['Hallway_B'],
+    'Room_104': ['Hallway_B'],
+    'Target_Room': ['Room_102']
+}
+
+# Execution
+start_node = 'Entrance'
+target_node = 'Target_Room'
+
+shortest_route = bfs_shortest_path(building_graph, start_node, target_node)
+
+print(f"Start Node: {start_node}")
+print(f"Target Node: {target_node}")
+print("Shortest Route Found:", " -> ".join(shortest_route))
